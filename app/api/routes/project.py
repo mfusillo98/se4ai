@@ -1,7 +1,6 @@
-import json
 from fastapi import APIRouter
 from pydantic import BaseModel
-from database.database import Database
+from app.database.database import Database
 import random
 import string
 
