@@ -1,0 +1,31 @@
+version: "3"
+services:
+    db:
+        restart: always
+        image: mysql:5.7
+        platform: linux/x86_64
+        ports:
+            - "32001:3306"
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+        volumes:
+            - ./mysql_data:/var/lib/mysql
+    phpmyadmin:
+        restart: always
+        image: phpmyadmin/phpmyadmin:latest
+        platform: linux/x86_64
+        links:
+            - "db"
+        environment:
+            PMA_HOST: db
+            PMA_USER: root
+            PMA_PASSWORD: root
+        ports:
+            - "8080:80"
+    app:
+        links:
+            - "db"
+        build:
+            dockerfile: app.Dockerfile
+        ports:
+            - "5001:80"

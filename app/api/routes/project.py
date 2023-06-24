@@ -1,4 +1,3 @@
-import json
 from fastapi import APIRouter
 from pydantic import BaseModel
 from app.database.database import Database
