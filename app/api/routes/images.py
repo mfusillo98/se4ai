@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.database.database import Database
+from app.database.database import get_db
 from pydantic import BaseModel
 import app.api.repository.images as images_repository
 
@@ -11,8 +11,7 @@ router = APIRouter()
 
 @router.get("/api/projects/{project_id}/resources/{external_id}/images")
 def get_images(project_id, external_id):
-    db = Database()
-    db.connect()
+    db = get_db()
 
     query = "SELECT * FROM projects WHERE project_id = " + project_id + ""
     projectStored = db.execute_select(query)
@@ -43,8 +42,7 @@ class ImagesAdd(BaseModel):
 
 @router.post("/api/projects/{project_id}/resources/{external_id}/images/add")
 def add_images(project_id, external_id, imagesAdd: ImagesAdd):
-    db = Database()
-    db.connect()
+    db = get_db()
     db.autocommit = False
 
     query = "SELECT * FROM projects WHERE api_key = '" + imagesAdd.api_key + "' AND project_id = " + project_id + ""
@@ -78,8 +76,7 @@ class ImagesDelete(BaseModel):
 
 @router.post("/api/projects/{project_id}/resources/{external_id}/images/delete")
 def add_images(project_id, external_id, imagesDelete: ImagesDelete):
-    db = Database()
-    db.connect()
+    db = get_db()
 
     query = "SELECT * FROM projects WHERE api_key = '" + imagesDelete.api_key + "' AND project_id = " + project_id + ""
     projectStored = db.execute_select(query)

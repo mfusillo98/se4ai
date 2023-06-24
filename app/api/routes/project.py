@@ -1,7 +1,7 @@
 import json
 from fastapi import APIRouter
 from pydantic import BaseModel
-from app.database.database import Database
+from app.database.database import get_db
 import random
 import string
 
@@ -24,8 +24,7 @@ def create_project(project: ProjectCreate):
     query = "INSERT INTO projects (name, api_key, selected_features_indexes) VALUES (%s, %s, %s)"
     values = [project.name, api_key, ','.join([str(index) for index in project.selected_features_indexes])]
 
-    db = Database()
-    db.connect()
+    db = get_db()
     project_id = db.execute_insert(query, values)
     db.close()
     return {"STATUS": "OK", "project_id": project_id, "api_key": api_key}
@@ -41,8 +40,7 @@ class ProjectUpdate(BaseModel):
 
 @router.post("/api/projects/{project_id}/update")
 def update_project(project_id, project: ProjectUpdate):
-    db = Database()
-    db.connect()
+    db = get_db()
 
     query = "SELECT * FROM projects WHERE api_key = '" + project.api_key + "' AND project_id = " + project_id + ""
     projectStored = db.execute_select(query)
