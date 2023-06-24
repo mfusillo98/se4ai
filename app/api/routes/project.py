@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from app.database.database import get_db
 import random
 import string
+import app.api.repository.projects as projects_repository
 
 router = APIRouter()
 
@@ -77,6 +78,7 @@ class FeatureSelection(BaseModel):
 
 @router.post("/api/projects/{project_id}/feature-selection")
 def feature_selection(project_id, api_key: FeatureSelection):
+    projects_repository.train_project(project_id)
     return {"message": "Elenco utenti"}
 
 
