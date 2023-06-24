@@ -1,6 +1,8 @@
 from fastapi import APIRouter
 from app.database.database import Database
 from pydantic import BaseModel
+import app.api.repository.images as images_repository
+
 
 router = APIRouter()
 
@@ -43,6 +45,7 @@ class ImagesAdd(BaseModel):
 def add_images(project_id, external_id, imagesAdd: ImagesAdd):
     db = Database()
     db.connect()
+    db.autocommit = False
 
     query = "SELECT * FROM projects WHERE api_key = '" + imagesAdd.api_key + "' AND project_id = " + project_id + ""
     projectStored = db.execute_select(query)
@@ -58,10 +61,11 @@ def add_images(project_id, external_id, imagesAdd: ImagesAdd):
 
     # store images
     for img_url in imagesAdd.images_url:
-        query = "INSERT INTO project_resource_images (url, resource_id) VALUES (%s, %s)"
-        values = [img_url, str(resource[0]["resource_id"])]
-        db.execute_insert(query, values)
+        image_id = images_repository.add_resource_image(str(resource[0]["resource_id"]), img_url, True)
+        if image_id is None:
+            return {"STATUS": "ERROR", "MESSAGE": "Image Store failed"}
 
+    db.conn.commit()
     db.close()
     return {"STATUS": "OK"}
 

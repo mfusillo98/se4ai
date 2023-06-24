@@ -5,7 +5,7 @@ ENV PYTHONPATH /code/app
 COPY ./requirements.txt /code/requirements.txt
 
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
-
+RUN python -c 'from keras.applications import VGG16; VGG16(weights="imagenet", include_top=True)'
 #
 COPY ./app /code/app
 

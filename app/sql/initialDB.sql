@@ -1,5 +1,6 @@
-CREATE
-DATABASE software_engineering;
+CREATE DATABASE software_engineering;
+
+USE software_engineering;
 
 CREATE TABLE projects
 (
