@@ -2,13 +2,13 @@ import mysql.connector
 
 
 class Database:
-    def __init__(self, host, port, socket, user, password, database):
-        self.host = host
-        self.user = user
-        self.port = port
-        self.socket = socket
-        self.password = password
-        self.database = database
+    def __init__(self):
+        self.host = 'localhost'
+        self.user = 'root'
+        self.port = '8888'
+        self.socket = '/Applications/MAMP/tmp/mysql/mysql.sock'
+        self.password = 'root'
+        self.database = 'software_engineering'
         self.conn = None
         self.cursor = None
 
@@ -29,12 +29,24 @@ class Database:
         if self.conn:
             self.conn.close()
 
-    def execute_query(self, query):
+    def execute_select(self, query):
         self.cursor.execute(query)
-        return self.cursor.fetchall()
+        results = self.cursor.fetchall()
+        columns = [column[0] for column in self.cursor.description]
+        return [dict(zip(columns, row)) for row in results]
 
     def execute_insert(self, query, values):
         self.cursor.execute(query, values)
         self.conn.commit()
         last_id = self.cursor.lastrowid
         return last_id
+
+    def execute_update(self, query, values):
+        self.cursor.execute(query, values)
+        self.conn.commit()
+        return self.cursor.rowcount
+
+    def execute_delete(self, query, values):
+        self.cursor.execute(query, values)
+        self.conn.commit()
+        return self.cursor.rowcount
