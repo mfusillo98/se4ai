@@ -1,8 +1,8 @@
 import uvicorn
 from fastapi import FastAPI
-from api.routes import project
-from api.routes import resources
-from api.routes import images
+from app.api.routes import project
+from app.api.routes import resources
+from app.api.routes import images
 
 app = FastAPI()
 
