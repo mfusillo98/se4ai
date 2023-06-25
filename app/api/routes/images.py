@@ -13,21 +13,24 @@ router = APIRouter()
 def get_images(project_id, external_id):
     db = get_db()
 
-    query = "SELECT * FROM projects WHERE project_id = " + project_id + ""
-    projectStored = db.execute_select(query)
+    query = "SELECT * FROM projects WHERE project_id = %s"
+    values = [project_id]
+    projectStored = db.execute_select(query, values)
 
     if len(projectStored) == 0:
         return {"STATUS": "ERROR", "message": "Project not found"}
 
-    query = "SELECT * FROM project_resources WHERE external_resource_id = '" + external_id + "' AND project_id = " + project_id + ""
-    resource = db.execute_select(query)
+    query = "SELECT * FROM project_resources WHERE external_resource_id = %s AND project_id = %s"
+    values = [external_id, project_id]
+    resource = db.execute_select(query, values)
 
     if len(resource) == 0:
         return {"STATUS": "ERROR", "message": "Resource not found"}
 
     # Store resource
-    query = "SELECT * FROM project_resource_images WHERE resource_id = '" + str(resource[0]["resource_id"]) + "'"
-    images = db.execute_select(query)
+    query = "SELECT * FROM project_resource_images WHERE resource_id = %s"
+    values = [str(resource[0]["resource_id"])]
+    images = db.execute_select(query, values)
 
     db.close()
     return {"STATUS": "OK", "images": images}
@@ -45,14 +48,16 @@ def add_images(project_id, external_id, imagesAdd: ImagesAdd):
     db = get_db()
     db.autocommit = False
 
-    query = "SELECT * FROM projects WHERE api_key = '" + imagesAdd.api_key + "' AND project_id = " + project_id + ""
-    projectStored = db.execute_select(query)
+    query = "SELECT * FROM projects WHERE api_key = %s AND project_id = %s"
+    values = [imagesAdd.api_key, project_id]
+    projectStored = db.execute_select(query, values)
 
     if len(projectStored) == 0:
         return {"STATUS": "ERROR", "message": "Project not found"}
 
-    query = "SELECT * FROM project_resources WHERE external_resource_id = '" + external_id + "' AND project_id = " + project_id + ""
-    resource = db.execute_select(query)
+    query = "SELECT * FROM project_resources WHERE external_resource_id = %s AND project_id = %s"
+    values = [external_id, project_id]
+    resource = db.execute_select(query, values)
 
     if len(resource) == 0:
         return {"STATUS": "ERROR", "message": "Resource not found"}
@@ -78,14 +83,16 @@ class ImagesDelete(BaseModel):
 def add_images(project_id, external_id, imagesDelete: ImagesDelete):
     db = get_db()
 
-    query = "SELECT * FROM projects WHERE api_key = '" + imagesDelete.api_key + "' AND project_id = " + project_id + ""
-    projectStored = db.execute_select(query)
+    query = "SELECT * FROM projects WHERE api_key = %s AND project_id = %s"
+    values = [imagesDelete.api_key, project_id]
+    projectStored = db.execute_select(query, values)
 
     if len(projectStored) == 0:
         return {"STATUS": "ERROR", "message": "Project not found"}
 
-    query = "SELECT * FROM project_resources WHERE external_resource_id = '" + external_id + "' AND project_id = " + project_id + ""
-    resource = db.execute_select(query)
+    query = "SELECT * FROM project_resources WHERE external_resource_id = %s AND project_id = %s"
+    values = [external_id, project_id]
+    resource = db.execute_select(query, values)
 
     if len(resource) == 0:
         return {"STATUS": "ERROR", "message": "Resource not found"}

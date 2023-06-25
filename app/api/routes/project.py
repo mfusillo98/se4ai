@@ -43,8 +43,9 @@ class ProjectUpdate(BaseModel):
 def update_project(project_id, project: ProjectUpdate):
     db = get_db()
 
-    query = "SELECT * FROM projects WHERE api_key = '" + project.api_key + "' AND project_id = " + project_id + ""
-    projectStored = db.execute_select(query)
+    query = "SELECT * FROM projects WHERE api_key = %s AND project_id = %s"
+    values = [project.api_key, project_id]
+    projectStored = db.execute_select(query, values)
 
     if len(projectStored) == 0:
         return {"STATUS": "ERROR", "message": "Project not found"}

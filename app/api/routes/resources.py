@@ -20,8 +20,9 @@ def add_resource(project_id, resource: ResourceAdd):
     db = get_db()
     db.autocommit = False
 
-    query = "SELECT * FROM projects WHERE api_key = '" + resource.api_key + "' AND project_id = " + project_id + ""
-    projectStored = db.execute_select(query)
+    query = "SELECT * FROM projects WHERE api_key = %s AND project_id = %s"
+    values = [resource.api_key, project_id]
+    projectStored = db.execute_select(query, values)
 
     if len(projectStored) == 0:
         return {"STATUS": "ERROR", "message": "Project not found"}
@@ -54,11 +55,12 @@ class ResourceDelete(BaseModel):
 
 @router.post("/api/projects/{project_id}/resources/{external_id}/delete")
 def delete_resource(project_id, external_id, project: ResourceDelete):
-    db = Database()
+    db = get_db()
     db.connect()
 
-    query = "SELECT * FROM projects WHERE api_key = '" + project.api_key + "' AND project_id = " + project_id + ""
-    projectStored = db.execute_select(query)
+    query = "SELECT * FROM projects WHERE api_key = %s AND project_id = %s"
+    values = [project.api_key, project_id]
+    projectStored = db.execute_select(query, values)
 
     if len(projectStored) == 0:
         return {"STATUS": "ERROR", "message": "Project not found"}

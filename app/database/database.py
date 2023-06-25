@@ -42,8 +42,8 @@ class Database:
         if self.conn:
             self.conn.close()
 
-    def execute_select(self, query):
-        self.cursor.execute(query)
+    def execute_select(self, query, values=None):
+        self.cursor.execute(query, values)
         results = self.cursor.fetchall()
         columns = [column[0] for column in self.cursor.description]
         return [dict(zip(columns, row)) for row in results]
