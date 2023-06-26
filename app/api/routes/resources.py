@@ -43,7 +43,6 @@ def add_resource(project_id, resource: ResourceAdd):
             return {"STATUS": "ERROR", "MESSAGE": "Image Store failed"}
 
     db.conn.commit()
-    db.close()
     return {"STATUS": "OK", "resource_id": resource_id}
 
 
@@ -73,5 +72,4 @@ def delete_resource(project_id, external_id, project: ResourceDelete):
     if deleted_rows is None:
         return {"STATUS": "ERROR", "message": "Delete undone"}
 
-    db.close()
     return {"STATUS": "OK"}

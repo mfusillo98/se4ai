@@ -27,7 +27,6 @@ def create_project(project: ProjectCreate):
 
     db = get_db()
     project_id = db.execute_insert(query, values)
-    db.close()
     return {"STATUS": "OK", "project_id": project_id, "api_key": api_key}
 
 
@@ -67,7 +66,6 @@ def update_project(project_id, project: ProjectUpdate):
     if rows_affected is None:
         return {"STATUS": "ERROR", "message": "Update failed"}
 
-    db.close()
     return {"status": "OK"}
 
 

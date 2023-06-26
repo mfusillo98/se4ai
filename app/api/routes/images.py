@@ -32,7 +32,6 @@ def get_images(project_id, external_id):
     values = [str(resource[0]["resource_id"])]
     images = db.execute_select(query, values)
 
-    db.close()
     return {"STATUS": "OK", "images": images}
 
 
@@ -69,7 +68,6 @@ def add_images(project_id, external_id, imagesAdd: ImagesAdd):
             return {"STATUS": "ERROR", "MESSAGE": "Image Store failed"}
 
     db.conn.commit()
-    db.close()
     return {"STATUS": "OK"}
 
 
@@ -105,5 +103,4 @@ def add_images(project_id, external_id, imagesDelete: ImagesDelete):
     if deleted_rows is None:
         return {"STATUS": "ERROR", "message": "Delete undone"}
 
-    db.close()
     return {"STATUS": "OK"}
