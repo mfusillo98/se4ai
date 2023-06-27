@@ -47,6 +47,16 @@ class Database:
         cursor.close()
         return data
 
+    def execute_lazy_select(self, query, values=None):
+        cursor = self.conn.cursor()
+        cursor.execute(query, values)
+        results = cursor.fetchall()
+        columns = [column[0] for column in cursor.description]
+        for row in results:
+            row_dict = dict(zip(columns, row))
+            yield row_dict
+        cursor.close()
+
     def execute_insert(self, query, values):
         cursor = self.conn.cursor()
         cursor.execute(query, values)

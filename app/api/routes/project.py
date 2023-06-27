@@ -11,13 +11,13 @@ router = APIRouter()
 
 # Create project
 
-class ProjectCreate(BaseModel):
+class ProjectCreateRequest(BaseModel):
     name: str
     selected_features_indexes: list[int] = []
 
 
 @router.post("/api/projects/create")
-def create_project(project: ProjectCreate):
+def create_project(project: ProjectCreateRequest):
     # Genera api_key
     characters = string.ascii_letters + string.digits
     api_key = ''.join(random.choice(characters) for _ in range(32))
@@ -32,21 +32,18 @@ def create_project(project: ProjectCreate):
 
 # Update project
 
-class ProjectUpdate(BaseModel):
+class ProjectUpdateRequest(BaseModel):
     api_key: str
     name: str
     selected_features_indexes: list[int] = []
 
 
 @router.post("/api/projects/{project_id}/update")
-def update_project(project_id, project: ProjectUpdate):
+def update_project(project_id, project: ProjectUpdateRequest):
     db = get_db()
 
-    query = "SELECT * FROM projects WHERE api_key = %s AND project_id = %s"
-    values = [project.api_key, project_id]
-    projectStored = db.execute_select(query, values)
-
-    if len(projectStored) == 0:
+    projectStored = projects_repository.get_project(project_id, project.api_key)
+    if projectStored is None:
         return {"STATUS": "ERROR", "message": "Project not found"}
 
     query = "UPDATE projects SET name = %s, selected_features_indexes = %s WHERE project_id = %s"
@@ -71,14 +68,28 @@ def update_project(project_id, project: ProjectUpdate):
 
 # Features selection
 
-class FeatureSelection(BaseModel):
+class TrainProjectRequest(BaseModel):
     api_key: str
 
 
-@router.post("/api/projects/{project_id}/feature-selection")
-def feature_selection(project_id, api_key: FeatureSelection):
-    projects_repository.train_project(project_id)
-    return {"message": "Elenco utenti"}
+@router.post("/api/projects/{project_id}/train")
+def train(project_id, request: TrainProjectRequest):
+    projectStored = projects_repository.get_project(project_id, request.api_key)
+    if projectStored is None:
+        return {"STATUS": "ERROR", "message": "Project not found"}
+    return projects_repository.train_project(project_id)
+
+
+class FeatureSelectionRequest(BaseModel):
+    api_key: str
+
+
+@router.post("/api/projects/{project_id}/apply-training")
+def apply_training(project_id, request: FeatureSelectionRequest):
+    project = projects_repository.get_project(project_id, request.api_key)
+    if project is None:
+        return {"STATUS": "ERROR", "message": "Project not found"}
+    return projects_repository.apply_training(project)
 
 
 # Search project

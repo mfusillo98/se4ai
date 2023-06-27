@@ -6,11 +6,16 @@ import numpy as np
 import app.utils.files as files
 
 
+_model = None
+
+
 # Create a feature extraction model by considering only the last dense layer of VGG 16 Neural Network
 def get_feature_extraction_model():
-    vgg16_model = keras.applications.VGG16(weights='imagenet', include_top=True)
-    fe_model = Model(inputs=vgg16_model.input, outputs=vgg16_model.get_layer("fc2").output)
-    return fe_model
+    global _model
+    if _model is None:
+        vgg16_model = keras.applications.VGG16(weights='imagenet', include_top=True)
+        _model = Model(inputs=vgg16_model.input, outputs=vgg16_model.get_layer("fc2").output)
+    return _model
 
 
 # Process a generic image file in order to be passed to the feature extraction model
