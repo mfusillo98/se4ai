@@ -10,7 +10,7 @@ def get_project(project_id, api_key):
     projectStored = db.execute_select(query, values)
     if len(projectStored) == 0:
         return None
-    return projectStored
+    return projectStored[0]
 
 
 def train_project(project_id):
@@ -31,7 +31,8 @@ def train_project(project_id):
     if rows_affected is None:
         return {"STATUS": "ERROR", "message": "Update failed"}
 
-    return {"STATUS": "ERROR", "message": "Project training completed"}
+    return {"STATUS": "OK", "message": "Project training completed", "indexes": indexes_str,
+            "rows_affected": rows_affected}
 
 
 def apply_training(project):
@@ -52,10 +53,11 @@ def apply_training(project):
         new_features = ','.join([str(raw_features[i]) for i in indexes])
         db.execute_delete("DELETE FROM project_resource_images_selected_features WHERE image_id = %s",
                           [image["image_id"]])
-        id = db.execute_insert("INSERT INTO project_resource_images_selected_features (image_id, features) VALUES (%s, %s)",
-                          [image["image_id"], new_features])
+        id = db.execute_insert(
+            "INSERT INTO project_resource_images_selected_features (image_id, features) VALUES (%s, %s)",
+            [image["image_id"], new_features])
         if id is None:
             return {"STATUS": "ERROR", "MESSAGE": "Cannot store image's selected features"}
 
     db.conn.commit()
-    return {"STATUS": "ERROR", "message": "Project training applied successfully"}
+    return {"STATUS": "OK", "message": "Project training applied successfully"}
