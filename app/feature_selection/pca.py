@@ -3,7 +3,7 @@ import numpy as np
 
 
 def get_best_features_indexes(data, min_explained_variance=0.95):
-    components = min(300, len(data))  # for testing purpose len(image_features) could be less than 300
+    components = min(800, len(data))  # for testing purpose len(image_features) could be less than 300
     pca = PCA(n_components=components)
     pca.fit_transform(data)
     best_features_idxs = []

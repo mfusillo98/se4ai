@@ -32,7 +32,7 @@ def train_project(project_id):
         return {"STATUS": "ERROR", "message": "Update failed"}
 
     return {"STATUS": "OK", "message": "Project training completed", "indexes": indexes_str,
-            "rows_affected": rows_affected}
+            "features_num": len(best_features_indexes)}
 
 
 def apply_training(project):
