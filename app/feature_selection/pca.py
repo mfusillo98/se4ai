@@ -25,6 +25,6 @@ def get_argmax_index_with_blacklist(items, blacklist_indexes):
     max_idx = None
     for i in range(0, len(items)):
         if i not in blacklist_indexes:
-            if max_idx is None or items[i] > items[max_idx]:
+            if max_idx is None or abs(items[i]) > abs(items[max_idx]):  # PCA sign does not affect its interpretation since the sign does not affect the variance contained in each component. Only the relative signs of features forming the PCA dimension are important.
                 max_idx = i
     return max_idx
