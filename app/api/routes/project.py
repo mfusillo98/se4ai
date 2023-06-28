@@ -8,6 +8,7 @@ import string
 import app.api.repository.projects as projects_repository
 import app.api.repository.search_engine as search_engine
 from app.feature_extraction.model import extract_features_from_url
+from utils import files
 
 router = APIRouter()
 
@@ -107,66 +108,34 @@ def search_project(api_key, project_id, image_url, limit, html):
     if html == "1":
         results_html = []
         for r in results:
-            results_html.append(f"""
-            <tr>
-                <td>
-                    <img src={r["image_url"]} style="max-height: 250px;"/>
-                </td>
-                <td>
-                    {r["resource"]["name"]}
-                </td>
-                <td>
-                    Distance {r["distance"]}
-                </td>
-            </tr>
-            """)
-        return HTMLResponse(content=f"""
-            <html>
-            <head>
-                <title>Search results</title>
-            </head>
-            <body>
-                <h1>Query image</h1>
-                <img src={image_url} style="max-height: 250px;"/>
-                
-                <h2>Search results</h2>
-                <table>
-                    {''.join(results_html)}
-                </table>
-                
-                <h1>Search again</h1>
-                <form action="/api/projects/search" method="GET">
-                    <input type="text" name="project_id" value="{project_id}" placeholder="Project ID"/>
-                    <input type="text" name="api_key" value="{api_key}" placeholder="API Key" /><br/>
-                    <input type="hidden" name="limit" value="{limit}"/>
-                    <input type="hidden" name="html" value="{html}"/>
-                    <input type="url" name="image_url" placeholder="Query Image URL" value="{image_url}" />
-                    <button>Search</button>
-                </form>
-            </body>
-            </html>
-            """, status_code=200)
+            results_html.append(get_search_result_html(r))
+        html_file = files.get_abs_path("/../pages/search-result-page.html")
+        with open(html_file, 'r') as file:
+            html_content = file.read()
+            html_content = html_content.replace("{{query_image_url}}", image_url)
+            html_content = html_content.replace("{{project_id}}", project_id)
+            html_content = html_content.replace("{{api_key}}", api_key)
+            html_content = html_content.replace("{{limit}}", limit)
+            html_content = html_content.replace("{{html}}", html)
+            html_content = html_content.replace("{{results}}", ''.join(results_html))
+            return HTMLResponse(content=html_content, status_code=200)
     else:
         return {"STATUS": "OK", "results": results}
 
 
 @router.get("/")
 def search_page():
-    return HTMLResponse(content=f"""
-                <html>
-                <head>
-                    <title>Search results</title>
-                </head>
-                <body>
-                    <h1>Search in project</h1>
-                    <form action="/api/projects/search" method="GET">
-                        <input type="text" name="project_id" placeholder="Project ID"/>
-                        <input type="text" name="api_key" placeholder="API Key" /><br/>
-                        <input type="hidden" name="limit" value="10"/>
-                        <input type="hidden" name="html" value="1"/>
-                        <input type="url" name="image_url" placeholder="Query Image URL" />
-                        <button>Search</button>
-                    </form>
-                </body>
-                </html>
-                """, status_code=200)
+    html_content = files.get_abs_path("/../pages/search.html")
+    with open(html_content, 'r') as file:
+        data = file.read()
+        return HTMLResponse(content=data, status_code=200)
+
+
+def get_search_result_html(r):
+    html_file = files.get_abs_path("/../pages/search-result-row.html")
+    with open(html_file, 'r') as file:
+        data = file.read()
+        data = data.replace("{{image_url}}", r["image_url"])
+        data = data.replace("{{name}}", r["resource"]["name"])
+        data = data.replace("{{distance}}", str(r["distance"]))
+        return data
