@@ -25,19 +25,5 @@ jobs:
 
     # Extract metadata (tags, labels) for Docker
 
-    - name: Extract Docker metadata
-      id: meta
-      uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
-      with:
-        images: index.docker.io/${{ secrets.REGISTRY_USERNAME }}/se4ai
-
-    - name: Build and push docker image to registry
-      uses: docker/build-push-action@v4
-      with:
-        context: .
-        file: /docker-compose.yml
-        push: true
-        tags: ${{ steps.meta.outputs.tags }}
-        labels: ${{ steps.meta.outputs.labels }}
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+    - name: Build and push
+        run: docker compose build && docker compose push
