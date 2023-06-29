@@ -26,4 +26,4 @@ jobs:
     # Extract metadata (tags, labels) for Docker
 
     - name: Build and push
-        run: docker compose build && docker compose push
+      run: docker compose build && docker compose push
