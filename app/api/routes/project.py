@@ -2,6 +2,8 @@ import json
 from fastapi import APIRouter
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
+from starlette.background import BackgroundTasks
+
 from app.database.database import get_db
 import random
 import string
@@ -77,11 +79,13 @@ class TrainProjectRequest(BaseModel):
 
 
 @router.post("/api/projects/{project_id}/train")
-def train(project_id, request: TrainProjectRequest):
+async def train(project_id, request: TrainProjectRequest, background_tasks: BackgroundTasks):
     projectStored = projects_repository.get_project(project_id, request.api_key)
     if projectStored is None:
         return {"STATUS": "ERROR", "message": "Project not found"}
-    return projects_repository.train_project(project_id)
+
+    background_tasks.add_task(projects_repository.train_project, project_id)
+    return {"STATUS": "OK", "message": "Train will be executed in background"}
 
 
 class FeatureSelectionRequest(BaseModel):
@@ -101,6 +105,10 @@ def apply_training(project_id, request: FeatureSelectionRequest):
 @router.get("/api/projects/search")
 def search_project(api_key, project_id, image_url, limit, html):
     project = projects_repository.get_project(project_id, api_key)
+
+    if project["trained"] != 1:
+        return {"STATUS": "ERROR", "message": "You have to train your project"}
+
     image_raw_features = extract_features_from_url(image_url)
     best_features_indexes = [int(x) for x in project["selected_features_indexes"].split(",")]
     image_features = [image_raw_features[i] for i in best_features_indexes]

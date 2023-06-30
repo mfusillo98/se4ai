@@ -17,32 +17,36 @@ class ResourceAdd(BaseModel):
 
 @router.post("/api/projects/{project_id}/resources/add")
 def add_resource(project_id, resource: ResourceAdd):
-    db = get_db()
-    db.autocommit = False
+    try:
+        db = get_db()
+        db.autocommit = False
 
-    query = "SELECT * FROM projects WHERE api_key = %s AND project_id = %s"
-    values = [resource.api_key, project_id]
-    projectStored = db.execute_select(query, values)
+        query = "SELECT * FROM projects WHERE api_key = %s AND project_id = %s"
+        values = [resource.api_key, project_id]
+        projectStored = db.execute_select(query, values)
 
-    if len(projectStored) == 0:
-        return {"STATUS": "ERROR", "message": "Project not found"}
+        if len(projectStored) == 0:
+            return {"STATUS": "ERROR", "message": "Project not found"}
 
-    # Store resource
-    query = "INSERT INTO project_resources (name, external_resource_id, project_id) VALUES (%s, %s, %s)"
-    values = [resource.name, resource.external_resource_id, project_id]
+        # Store resource
+        query = "INSERT INTO project_resources (name, external_resource_id, project_id) VALUES (%s, %s, %s)"
+        values = [resource.name, resource.external_resource_id, project_id]
 
-    resource_id = db.execute_insert(query, values)
+        resource_id = db.execute_insert(query, values)
 
-    if resource_id is None:
-        return {"STATUS": "ERROR", "MESSAGE": "Store failed"}
+        if resource_id is None:
+            return {"STATUS": "ERROR", "MESSAGE": "Store failed"}
 
-    # store images
-    for img_url in resource.images_url:
-        image_id = images_repository.add_resource_image(resource_id, img_url, True)
-        if image_id is None:
-            return {"STATUS": "ERROR", "MESSAGE": "Image Store failed"}
+        # store images
+        for img_url in resource.images_url:
+            image_id = images_repository.add_resource_image(resource_id, img_url, True)
+            if image_id is None:
+                return {"STATUS": "ERROR", "MESSAGE": "Image Store failed"}
 
-    db.conn.commit()
+        db.conn.commit()
+    except Exception as e:
+        return {"STATUS": "ERROR", "message": "Error: "+str(e)}
+
     return {"STATUS": "OK", "resource_id": resource_id}
 
 

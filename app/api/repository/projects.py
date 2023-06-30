@@ -26,10 +26,15 @@ def train_project(project_id):
         feature_list.append([float(x) for x in r['features'].split(",")])
     best_features_indexes = get_best_features_indexes(np.array(feature_list))
     indexes_str = ','.join([str(idx) for idx in best_features_indexes])
-    rows_affected = db.execute_update("UPDATE projects SET selected_features_indexes = %s WHERE project_id = %s",
+    rows_affected = db.execute_update("UPDATE projects SET selected_features_indexes = %s, trained = 1 WHERE project_id = %s",
                                       [indexes_str, project_id])
     if rows_affected is None:
         return {"STATUS": "ERROR", "message": "Update failed"}
+
+    db.execute_insert(
+        "INSERT INTO project_train_history (project_id, selected_features_indexes) VALUES (%s, %s)",
+        [project_id, indexes_str]
+    )
 
     return {"STATUS": "OK", "message": "Project training completed", "indexes": indexes_str,
             "features_num": len(best_features_indexes)}
