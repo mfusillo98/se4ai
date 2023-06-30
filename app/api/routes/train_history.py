@@ -1,16 +1,9 @@
-import json
 from fastapi import APIRouter
-from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
-from starlette.background import BackgroundTasks
 
 from app.database.database import get_db
-import random
-import string
 import app.api.repository.projects as projects_repository
-import app.api.repository.search_engine as search_engine
-from app.feature_extraction.model import extract_features_from_url
-from utils import files
+
 
 router = APIRouter()
 
@@ -66,4 +59,4 @@ def pull_training(project_id, request: PullTrainHistoryRequests):
     if rows_affected is None:
         return {"STATUS": "ERROR", "message": "Update failed"}
 
-    return projects_repository.apply_training(project)
+    return {"STATUS": "OK", "message": "Pull executed"}
