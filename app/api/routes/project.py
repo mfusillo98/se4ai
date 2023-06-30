@@ -112,7 +112,8 @@ def search_project(api_key, project_id, image_url, limit, html):
     image_raw_features = extract_features_from_url(image_url)
     best_features_indexes = [int(x) for x in project["selected_features_indexes"].split(",")]
     image_features = [image_raw_features[i] for i in best_features_indexes]
-    results = search_engine.search(project_id, image_features, int(limit))
+    results = search_engine.search(project_id, project["selected_features_indexes"], image_url, image_features, int(limit))
+
     if html == "1":
         results_html = []
         for r in results:

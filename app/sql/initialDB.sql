@@ -58,9 +58,23 @@ ALTER TABLE projects
 
 CREATE TABLE project_train_history
 (
-    history_id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    project_id INT(11) NOT NULL,
+    history_id                INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    project_id                INT(11) NOT NULL,
     selected_features_indexes TEXT,
-    created_at           timestamp default current_timestamp,
+    created_at                timestamp default current_timestamp,
+    FOREIGN KEY (project_id) REFERENCES projects (project_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+CREATE TABLE project_search_performance
+(
+    search_id                         INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    project_id                        INT(11) NOT NULL,
+    selected_features_indexes         TEXT,
+    image_url                         TEXT,
+    results_with_feature_selection    TEXT,
+    results_without_feature_selection TEXT,
+    error                             FLOAT,
+    created_at                        timestamp default current_timestamp,
     FOREIGN KEY (project_id) REFERENCES projects (project_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
