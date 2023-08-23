@@ -10,7 +10,7 @@ import string
 import app.api.repository.projects as projects_repository
 import app.api.repository.search_engine as search_engine
 from app.feature_extraction.model import extract_features_from_url
-from utils import files
+from app.utils import files
 
 router = APIRouter()
 
