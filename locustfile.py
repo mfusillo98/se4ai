@@ -4,7 +4,7 @@ from locust import HttpUser, task, between
 import json
 
 '''
-To start a locust test you have ti create before a user and store the
+To start a locust test you have to create before a project and train it and store the
 credentials inside the credentials variable
 
 to start digit locust on terminal
@@ -14,14 +14,14 @@ to start digit locust on terminal
 class QuickstartUser(HttpUser):
     wait_time = between(1, 5)
 
-    credentials = {"project_id": 36, "api_key": "V3O9ZGg4t06BEzO3BLK5UX2bQd0egUlW"}
+    credentials = {"project_id": 34, "api_key": "H8RMIAIGWBCH90nBVSg12WaxNZvXdaV6"}
 
     # Edit a project name
     @task
     def project_update(self):
         body = {
             "api_key": self.credentials["api_key"],
-            "name": "locust_test_" + str(randint(1, 100)),
+            "name": "bookizon_" + str(randint(1, 100)),
             "selected_features_indexes": []
         }
 
@@ -36,8 +36,7 @@ class QuickstartUser(HttpUser):
             "api_key": self.credentials["api_key"],
             "name": "resource_test_" + str(randint(1, 100)),
             "external_resource_id": str(randint(1, 100)),
-            "images_url": [
-                "https://media.istockphoto.com/id/1322277517/photo/wild-grass-in-the-mountains-at-sunset.jpg?s=612x612&w=0&k=20&c=6mItwwFFGqKNKEAzv0mv6TaxhLN3zSE43bWmFN--J5w="]
+            "images_url": ["https://www.salepepe.it/files/2014/03/come-fare-patate-fritte_05-1140x636.jpg"]
         }
 
         headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
@@ -52,12 +51,9 @@ class QuickstartUser(HttpUser):
             "api_key": self.credentials["api_key"],
             "project_id": str(self.credentials["project_id"]),
             "limit": str(10),
-            "offset": str(1),
-            "images_url": "https://media.istockphoto.com/id/1322277517/photo/wild-grass-in-the-mountains-at-sunset.jpg?s=612x612&w=0&k=20&c=6mItwwFFGqKNKEAzv0mv6TaxhLN3zSE43bWmFN--J5w=",
-            "html": 0
+            "image_url": "https://blog.giallozafferano.it/allacciateilgrembiule/wp-content/uploads/2021/01/patatine-fritte-fatte-in-casa.jpg",
+            "html": 0,
         }
 
         headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
-        self.client.get("/api/projects/search",
-                        params=json.dumps(params),
-                        headers=headers)
+        self.client.get("/api/projects/search", params=params, headers=headers)
