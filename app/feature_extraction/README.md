@@ -157,7 +157,11 @@ Balancing these aspects will lead to responsible and effective model usage.
 
 <!-- This should link to a Data Card, perhaps with a short stub of information on what the training data is all about as well as documentation related to data pre-processing or additional filtering. -->
 
-More information on training data needed
+VGG16 was trained on the ImageNet dataset, 
+specifically the ILSVRC dataset. The ILSVRC dataset contains around 1.2 million images for 
+training and validation, categorized into 1,000 classes. 
+This dataset is known for its diversity and size, making it suitable for training deep neural networks 
+like VGG16.
 
 
 ## Training Procedure
@@ -166,13 +170,22 @@ More information on training data needed
 
 ### Preprocessing
 
-More information needed
+1. Resizing: Images in the dataset are resized to a fixed resolution (usually 224x224 pixels)
+2. Mean Subtraction: The mean pixel values of the entire dataset are subtracted from each image
+3. Data Augmentation: Data augmentation techniques are often applied during training. 
+These include random cropping, horizontal flipping, and sometimes color perturbations. 
+These techniques increase the effective size of the training dataset and help the model become more robust.
 
 ### Speeds, Sizes, Times
 
 <!-- This section provides information about throughput, start/end time, checkpoint size if relevant, etc. -->
 
-More information needed
+The training time for VGG16 can vary significantly based on hardware, software optimization, and dataset size. 
+With powerful GPUs, it might take several days to train the model from scratch on the full ImageNet dataset.
+
+It contains around 138 million parameters
+
+
  
 # Evaluation
 
@@ -184,28 +197,27 @@ More information needed
 
 <!-- This should link to a Data Card if possible. -->
 
-More information needed
-
 
 ### Factors
 
 <!-- These are the things the evaluation is disaggregating by, e.g., subpopulations or domains. -->
 
-More information needed
+Several factors can influence the performance of VGG16 on the testing data: Data Quality, 
+Data Distribution, Preprocessing, Noise and Variation
 
 ### Metrics
 
 <!-- These are the evaluation metrics being used, ideally with a description of why. -->
 
-More information needed
+Various metrics are used to quantify the performance of the VGG16 model on the testing data: 
+- Top-1 Accuracy: This metric measures the percentage of images for which the correct class is the top prediction made by the model. It's a standard metric used in image classification tasks and is particularly relevant for models trained on the ImageNet dataset.
+- Top-5 Accuracy: In addition to the top-1 accuracy, the top-5 accuracy measures the percentage of images for which the correct class is among the top 5 predictions.
+- Precision and Recall
+- F1-Score
 
-## Results 
 
-More information needed
 
 # Model Examination
-
-More information needed
 
 ## Model Architecture and Objective
 
