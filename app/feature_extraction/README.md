@@ -7,7 +7,7 @@
 
 
 
-# Model Card for MODEL CARD: VGG16 without last dense layer
+# Model Card for VGG16 without last dense layer
 
 <!-- Provide a quick summary of what the model is/does. [Optional] -->
 It uses a powerful image model called VGG16 to extract features from images, unique characteristics that describe each image. 
