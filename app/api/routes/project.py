@@ -1,3 +1,7 @@
+"""
+Routes for operations about project
+"""
+
 import json
 from fastapi import APIRouter
 from fastapi.responses import HTMLResponse
@@ -24,6 +28,11 @@ class ProjectCreateRequest(BaseModel):
 
 @router.post("/api/projects/create")
 def create_project(project: ProjectCreateRequest):
+    """
+    Create a new project
+    :param project:
+    :return:
+    """
     # Genera api_key
     characters = string.ascii_letters + string.digits
     api_key = ''.join(random.choice(characters) for _ in range(32))
@@ -46,6 +55,12 @@ class ProjectUpdateRequest(BaseModel):
 
 @router.post("/api/projects/{project_id}/update")
 def update_project(project_id, project: ProjectUpdateRequest):
+    """
+    Update a project info like name or selected features
+    :param project_id:
+    :param project:
+    :return:
+    """
     db = get_db()
 
     projectStored = projects_repository.get_project(project_id, project.api_key)
@@ -80,6 +95,13 @@ class TrainProjectRequest(BaseModel):
 
 @router.post("/api/projects/{project_id}/train")
 async def train(project_id, request: TrainProjectRequest, background_tasks: BackgroundTasks):
+    """
+    Train a project
+    :param project_id:
+    :param request:
+    :param background_tasks:
+    :return:
+    """
     projectStored = projects_repository.get_project(project_id, request.api_key)
     if projectStored is None:
         return {"STATUS": "ERROR", "message": "Project not found"}
@@ -94,6 +116,12 @@ class FeatureSelectionRequest(BaseModel):
 
 @router.post("/api/projects/{project_id}/apply-training")
 def apply_training(project_id, request: FeatureSelectionRequest):
+    """
+    Apply a training on a project and stores index of main features
+    :param project_id:
+    :param request:
+    :return:
+    """
     project = projects_repository.get_project(project_id, request.api_key)
     if project is None:
         return {"STATUS": "ERROR", "message": "Project not found"}
@@ -104,6 +132,15 @@ def apply_training(project_id, request: FeatureSelectionRequest):
 
 @router.get("/api/projects/search")
 def search_project(api_key, project_id, image_url, limit, html):
+    """
+    Search engine based on image similarity to feature taken
+    :param api_key:
+    :param project_id:
+    :param image_url:
+    :param limit:
+    :param html:
+    :return:
+    """
     project = projects_repository.get_project(project_id, api_key)
 
     if project["trained"] != 1:

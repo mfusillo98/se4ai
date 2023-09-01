@@ -1,3 +1,7 @@
+"""
+Images repository
+"""
+
 from app.database.database import get_db
 from app.feature_extraction.model import extract_features_from_url
 
@@ -7,6 +11,10 @@ def add_resource_image(resource_id, img_url, compute_features=True):
     Add a new image and compute it's raw features if requested
     :param resource_id:
     :param img_url:
+    :param compute_features:
+    :type resource_id: int
+    :type img_url: str
+    :type compute_features: bool
     :return: image_id
     """
     db = get_db()

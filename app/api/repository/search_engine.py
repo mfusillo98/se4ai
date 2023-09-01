@@ -1,8 +1,23 @@
-from app.database.database import get_db
+"""
+Search Engine repository
+"""
+
 from scipy.spatial import distance
+from app.database.database import get_db
 
 
 def search(project_id, image_features, max_results=10):
+    """
+    Search engine based on image similarity to feature taken
+    :param project_id:
+    :param image_features:
+    :param max_results:
+    :type project_id: int
+    :type image_features: array
+    :type max_results: int
+    :return:
+    """
+
     db = get_db()
     db.autocommit = False
 

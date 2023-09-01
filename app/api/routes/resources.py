@@ -1,3 +1,7 @@
+"""
+Routes for operations about resources
+"""
+
 from fastapi import APIRouter
 from pydantic import BaseModel
 from app.database.database import get_db
@@ -17,6 +21,12 @@ class ResourceAdd(BaseModel):
 
 @router.post("/api/projects/{project_id}/resources/add")
 def add_resource(project_id, resource: ResourceAdd):
+    """
+    Add a new resource
+    :param project_id:
+    :param resource:
+    :return:
+    """
     try:
         db = get_db()
         db.autocommit = False
@@ -58,6 +68,13 @@ class ResourceDelete(BaseModel):
 
 @router.post("/api/projects/{project_id}/resources/{external_id}/delete")
 def delete_resource(project_id, external_id, project: ResourceDelete):
+    """
+    Delete a resource
+    :param project_id:
+    :param external_id:
+    :param project:
+    :return:
+    """
     db = get_db()
     db.connect()
 

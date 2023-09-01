@@ -1,16 +1,25 @@
+"""
+Routes for operations about images
+"""
+
 from fastapi import APIRouter
-from app.database.database import get_db
 from pydantic import BaseModel
+from app.database.database import get_db
 import app.api.repository.images as images_repository
 
 
 router = APIRouter()
 
 
-# Get images
-
 @router.get("/api/projects/{project_id}/resources/{external_id}/images")
 def get_images(project_id, external_id):
+    """
+    Get images
+
+    :param project_id:
+    :param external_id:
+    :return:
+    """
     db = get_db()
 
     query = "SELECT * FROM projects WHERE project_id = %s"
@@ -35,8 +44,6 @@ def get_images(project_id, external_id):
     return {"STATUS": "OK", "images": images}
 
 
-# Add image
-
 class ImagesAdd(BaseModel):
     api_key: str
     images_url: list[str] = []
@@ -44,6 +51,14 @@ class ImagesAdd(BaseModel):
 
 @router.post("/api/projects/{project_id}/resources/{external_id}/images/add")
 def add_images(project_id, external_id, imagesAdd: ImagesAdd):
+    """
+    Add image
+
+    :param project_id:
+    :param external_id:
+    :param imagesAdd:
+    :return:
+    """
     db = get_db()
     db.autocommit = False
 
@@ -71,14 +86,20 @@ def add_images(project_id, external_id, imagesAdd: ImagesAdd):
     return {"STATUS": "OK"}
 
 
-# Delete images
-
 class ImagesDelete(BaseModel):
     api_key: str
 
 
 @router.post("/api/projects/{project_id}/resources/{external_id}/images/delete")
 def add_images(project_id, external_id, imagesDelete: ImagesDelete):
+    """
+    Delete images
+
+    :param project_id:
+    :param external_id:
+    :param imagesDelete:
+    :return:
+    """
     db = get_db()
 
     query = "SELECT * FROM projects WHERE api_key = %s AND project_id = %s"

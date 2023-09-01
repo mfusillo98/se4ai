@@ -1,19 +1,38 @@
+"""
+Projects repository
+"""
+
+import numpy as np
 from app.database.database import get_db
 from app.feature_selection.pca import get_best_features_indexes
-import numpy as np
-
 
 def get_project(project_id, api_key):
+    """
+    Get a project based on id and apikey
+    :param project_id:
+    :param api_key:
+    :type project_id: int
+    :type api_key: int
+    :return:
+    """
+
     db = get_db()
     query = "SELECT * FROM projects WHERE api_key = %s AND project_id = %s"
     values = [api_key, project_id]
-    projectStored = db.execute_select(query, values)
-    if len(projectStored) == 0:
+    project_stored = db.execute_select(query, values)
+    if len(project_stored) == 0:
         return None
-    return projectStored[0]
+    return project_stored[0]
 
 
 def train_project(project_id):
+    """
+    Train a project
+    :param project_id:
+    :type project_id: int
+    :return:
+    """
+
     db = get_db()
 
     # Getting best indexes
@@ -41,6 +60,13 @@ def train_project(project_id):
 
 
 def apply_training(project):
+    """
+    Apply a training on a project and stores index of main features
+    :param project:
+    :type project:
+    :return:
+    """
+
     db = get_db()
     db.autocommit = False
 
