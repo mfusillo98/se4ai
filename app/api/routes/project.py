@@ -2,15 +2,14 @@
 Routes for operations about project
 """
 
-import json
+import random
+import string
 from fastapi import APIRouter
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 from starlette.background import BackgroundTasks
 
 from app.database.database import get_db
-import random
-import string
 import app.api.repository.projects as projects_repository
 import app.api.repository.search_engine as search_engine
 from app.feature_extraction.model import extract_features_from_url
@@ -31,6 +30,7 @@ def create_project(project: ProjectCreateRequest):
     """
     Create a new project
     :param project:
+    :type project:
     :return:
     """
     # Genera api_key
@@ -57,8 +57,12 @@ class ProjectUpdateRequest(BaseModel):
 def update_project(project_id, project: ProjectUpdateRequest):
     """
     Update a project info like name or selected features
+
     :param project_id:
     :param project:
+
+    :type project_id:
+    :type project:
     :return:
     """
     db = get_db()
@@ -100,6 +104,11 @@ async def train(project_id, request: TrainProjectRequest, background_tasks: Back
     :param project_id:
     :param request:
     :param background_tasks:
+
+    :type project_id:
+    :type request:
+    :type background_tasks:
+
     :return:
     """
     projectStored = projects_repository.get_project(project_id, request.api_key)
@@ -120,6 +129,10 @@ def apply_training(project_id, request: FeatureSelectionRequest):
     Apply a training on a project and stores index of main features
     :param project_id:
     :param request:
+
+    :type project_id:
+    :type request:
+
     :return:
     """
     project = projects_repository.get_project(project_id, request.api_key)
@@ -139,6 +152,13 @@ def search_project(api_key, project_id, image_url, limit, html):
     :param image_url:
     :param limit:
     :param html:
+
+    :type api_key:
+    :type project_id:
+    :type image_url:
+    :type limit:
+    :type html:
+
     :return:
     """
     project = projects_repository.get_project(project_id, api_key)
@@ -156,7 +176,7 @@ def search_project(api_key, project_id, image_url, limit, html):
         for r in results:
             results_html.append(get_search_result_html(r))
         html_file = files.get_abs_path("/../pages/search-result-page.html")
-        with open(html_file, 'r') as file:
+        with open(html_file, 'r', encoding="utf-8") as file:
             html_content = file.read()
             html_content = html_content.replace("{{query_image_url}}", image_url)
             html_content = html_content.replace("{{project_id}}", project_id)
@@ -172,14 +192,14 @@ def search_project(api_key, project_id, image_url, limit, html):
 @router.get("/")
 def search_page():
     html_content = files.get_abs_path("/../pages/search.html")
-    with open(html_content, 'r') as file:
+    with open(html_content, 'r', encoding="utf-8") as file:
         data = file.read()
         return HTMLResponse(content=data, status_code=200)
 
 
 def get_search_result_html(r):
     html_file = files.get_abs_path("/../pages/search-result-row.html")
-    with open(html_file, 'r') as file:
+    with open(html_file, 'r', encoding="utf-8") as file:
         data = file.read()
         data = data.replace("{{image_url}}", r["image_url"])
         data = data.replace("{{name}}", r["resource"]["name"])

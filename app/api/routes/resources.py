@@ -25,6 +25,10 @@ def add_resource(project_id, resource: ResourceAdd):
     Add a new resource
     :param project_id:
     :param resource:
+
+    :type project_id:
+    :type resource:
+
     :return:
     """
     try:
@@ -73,6 +77,11 @@ def delete_resource(project_id, external_id, project: ResourceDelete):
     :param project_id:
     :param external_id:
     :param project:
+
+    :type project_id:
+    :type external_id:
+    :type project:
+
     :return:
     """
     db = get_db()

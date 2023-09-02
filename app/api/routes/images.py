@@ -15,9 +15,12 @@ router = APIRouter()
 def get_images(project_id, external_id):
     """
     Get images
-
     :param project_id:
     :param external_id:
+
+    :type project_id: int
+    :type external_id: int
+
     :return:
     """
     db = get_db()
@@ -53,10 +56,14 @@ class ImagesAdd(BaseModel):
 def add_images(project_id, external_id, imagesAdd: ImagesAdd):
     """
     Add image
-
     :param project_id:
     :param external_id:
     :param imagesAdd:
+
+    :type project_id: int
+    :type external_id: int
+    :type imagesAdd: list
+
     :return:
     """
     db = get_db()
@@ -91,13 +98,17 @@ class ImagesDelete(BaseModel):
 
 
 @router.post("/api/projects/{project_id}/resources/{external_id}/images/delete")
-def add_images(project_id, external_id, imagesDelete: ImagesDelete):
+def delete_image(project_id, external_id, imagesDelete: ImagesDelete):
     """
     Delete images
-
     :param project_id:
     :param external_id:
     :param imagesDelete:
+
+    :type project_id:
+    :type external_id:
+    :type imagesDelete:
+
     :return:
     """
     db = get_db()

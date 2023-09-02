@@ -9,11 +9,12 @@ from app.database.database import get_db
 def search(project_id, image_features, max_results=10):
     """
     Search engine based on image similarity to feature taken
-    :param project_id:
-    :param image_features:
-    :param max_results:
+    :param project_id: id of a project
+    :param image_features: image's feature list
+    :param max_results: results to get
+
     :type project_id: int
-    :type image_features: array
+    :type image_features: list
     :type max_results: int
     :return:
     """

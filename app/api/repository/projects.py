@@ -6,11 +6,13 @@ import numpy as np
 from app.database.database import get_db
 from app.feature_selection.pca import get_best_features_indexes
 
+
 def get_project(project_id, api_key):
     """
     Get a project based on id and apikey
-    :param project_id:
-    :param api_key:
+    :param project_id: id of a project
+    :param api_key: apikey of project to ant to access
+
     :type project_id: int
     :type api_key: int
     :return:
@@ -28,7 +30,7 @@ def get_project(project_id, api_key):
 def train_project(project_id):
     """
     Train a project
-    :param project_id:
+    :param project_id: id of a project
     :type project_id: int
     :return:
     """
@@ -45,8 +47,9 @@ def train_project(project_id):
         feature_list.append([float(x) for x in r['features'].split(",")])
     best_features_indexes = get_best_features_indexes(np.array(feature_list))
     indexes_str = ','.join([str(idx) for idx in best_features_indexes])
-    rows_affected = db.execute_update("UPDATE projects SET selected_features_indexes = %s, trained = 1 WHERE project_id = %s",
-                                      [indexes_str, project_id])
+    rows_affected = db.execute_update(
+        "UPDATE projects SET selected_features_indexes = %s, trained = 1 WHERE project_id = %s",
+        [indexes_str, project_id])
     if rows_affected is None:
         return {"STATUS": "ERROR", "message": "Update failed"}
 
@@ -62,8 +65,8 @@ def train_project(project_id):
 def apply_training(project):
     """
     Apply a training on a project and stores index of main features
-    :param project:
-    :type project:
+    :param project: project row od database
+    :type project: list
     :return:
     """
 

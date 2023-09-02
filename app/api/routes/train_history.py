@@ -1,3 +1,7 @@
+"""
+Routes for operations about train history
+"""
+
 from fastapi import APIRouter
 from pydantic import BaseModel
 
@@ -16,6 +20,17 @@ class GetTrainHistoryRequests(BaseModel):
 
 @router.post("/api/projects/{project_id}/train-history")
 def get_train_history(project_id, request: GetTrainHistoryRequests):
+    """
+    Get train hostory of a project
+    :param project_id:
+    :param request:
+
+    :type project_id:
+    :type request:
+
+    :return:
+    """
+
     db = get_db()
 
     project = projects_repository.get_project(project_id, request.api_key)
@@ -39,6 +54,16 @@ class PullTrainHistoryRequests(BaseModel):
 
 @router.post("/api/projects/{project_id}/train-history/pull")
 def pull_training(project_id, request: PullTrainHistoryRequests):
+    """
+    Pull a training
+    :param project_id:
+    :param request:
+
+    :type project_id:
+    :type request:
+
+    :return:
+    """
     db = get_db()
 
     project = projects_repository.get_project(project_id, request.api_key)
