@@ -5,6 +5,8 @@ Projects repository
 import numpy as np
 from app.database.database import get_db
 from app.feature_selection.pca import get_best_features_indexes
+import time
+from utils import metrics
 
 
 def get_project(project_id, api_key):
@@ -34,7 +36,7 @@ def train_project(project_id):
     :type project_id: int
     :return:
     """
-
+    start = time.time()
     db = get_db()
 
     # Getting best indexes
@@ -57,6 +59,8 @@ def train_project(project_id):
         "INSERT INTO project_train_history (project_id, selected_features_indexes) VALUES (%s, %s)",
         [project_id, indexes_str]
     )
+    end = time.time()
+    metrics.metrics['training_duration_seconds'].observe(end - start)
 
     return {"STATUS": "OK", "message": "Project training completed", "indexes": indexes_str,
             "features_num": len(best_features_indexes)}

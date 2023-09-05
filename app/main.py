@@ -4,6 +4,7 @@ Main of application
 
 import uvicorn
 from fastapi import FastAPI
+from prometheus_fastapi_instrumentator import Instrumentator
 from app.api.routes import project, resources, images, train_history, test
 
 app = FastAPI()
@@ -15,5 +16,7 @@ app.include_router(images.router)
 app.include_router(train_history.router)
 app.include_router(test.router)
 
-if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+#if __name__ == "__main__":
+ #   uvicorn.run(app, host="0.0.0.0", port=8000)
+
+Instrumentator().instrument(app).expose(app)

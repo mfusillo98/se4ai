@@ -9,3 +9,6 @@ tensorflow
 Pillow
 scikit-learn
 scipy
+pytest
+httpx
+prometheus-fastapi-instrumentator

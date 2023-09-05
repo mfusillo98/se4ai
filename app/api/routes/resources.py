@@ -6,6 +6,7 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 from app.database.database import get_db
 import app.api.repository.images as images_repository
+from utils import metrics
 
 router = APIRouter()
 
@@ -61,6 +62,7 @@ def add_resource(project_id, resource: ResourceAdd):
     except Exception as e:
         return {"STATUS": "ERROR", "message": "Error: "+str(e)}
 
+    metrics.metrics['resources_created_total'].inc()
     return {"STATUS": "OK", "resource_id": resource_id}
 
 
