@@ -245,7 +245,7 @@ features-visualize-filters-and-feature-maps-in-
 vgg16-and-vgg19-cnn-models-d2da6333edd0
 
 
-# Model Card Authors [optional]
+# Model Card Authors
 
 <!-- This section provides another layer of transparency and accountability. Whose views is this model card representing? How many voices were included in its construction? Etc. -->
 

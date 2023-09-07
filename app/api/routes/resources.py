@@ -6,7 +6,7 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 from app.database.database import get_db
 import app.api.repository.images as images_repository
-from utils import metrics
+from app.utils import metrics
 
 router = APIRouter()
 
