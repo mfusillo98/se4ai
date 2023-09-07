@@ -19,13 +19,10 @@ PCA is used to choose the most important features, is useful for quickly analyzi
 #  Table of Contents
 
 - [Model Card for MODEL CARD: VGG16 without last dense layer](#model-card-for--model_id-)
-- [Table of Contents](#table-of-contents)
-- [Table of Contents](#table-of-contents-1)
 - [Model Details](#model-details)
   - [Model Description](#model-description)
 - [Uses](#uses)
-  - [Direct Use](#direct-use)
-  - [Downstream Use [Optional]](#downstream-use-optional)
+  - [Downstream Use](#downstream-use-optional)
   - [Out-of-Scope Use](#out-of-scope-use)
 - [Bias, Risks, and Limitations](#bias-risks-and-limitations)
   - [Recommendations](#recommendations)
@@ -41,17 +38,9 @@ PCA is used to choose the most important features, is useful for quickly analyzi
     - [Metrics](#metrics)
   - [Results](#results)
 - [Model Examination](#model-examination)
-- [Technical Specifications [optional]](#technical-specifications-optional)
   - [Model Architecture and Objective](#model-architecture-and-objective)
-  - [Compute Infrastructure](#compute-infrastructure)
-    - [Hardware](#hardware)
-    - [Software](#software)
 - [Citation](#citation)
-- [Glossary [optional]](#glossary-optional)
-- [More Information [optional]](#more-information-optional)
-- [Model Card Authors [optional]](#model-card-authors-optional)
-- [Model Card Contact](#model-card-contact)
-- [How to Get Started with the Model](#how-to-get-started-with-the-model)
+- [Model Card Authors](#model-card-authors-optional)
 
 
 # Model Details
@@ -85,13 +74,6 @@ The impact of the model extends to various stakeholders:
 - **Developers/Researchers:** These individuals may benefit from a faster and automated way of processing and preparing image data for further analysis or model training.
 - **End Users:** If the model contributes to improved accuracy and efficiency in downstream tasks like image classification, end users of applications that utilize these features might experience better performance.
 - **Data Providers:** The model relies on the ImageNet dataset for pre-training. The data providers and curators of ImageNet could indirectly be affected by the model's use, as it demonstrates the value of their dataset in enabling diverse computer vision applications.
-
-
-## Direct Use
-
-<!-- This section is for the model use without fine-tuning or plugging into a larger ecosystem/app. -->
-<!-- If the user enters content, print that. If not, but they enter a task in the list, use that. If neither, say "more info needed." -->
-More info needed.
 
 
 ## Downstream Use
@@ -250,14 +232,3 @@ vgg16-and-vgg19-cnn-models-d2da6333edd0
 <!-- This section provides another layer of transparency and accountability. Whose views is this model card representing? How many voices were included in its construction? Etc. -->
 
 S. Amoruso, M. Fusillo
-
-# How to Get Started with the Model
-
-Use the code below to get started with the model.
-
-<details>
-<summary> Click to expand </summary>
-
-More information needed
-
-</details>
