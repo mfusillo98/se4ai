@@ -1,5 +1,5 @@
 """
-Images repository
+Images repository, there are some function used for image analysis
 """
 
 from app.database.database import get_db
