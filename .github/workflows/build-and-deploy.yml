@@ -56,4 +56,4 @@ jobs:
             # Login to registry
             docker login -u ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} -p ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} registry.digitalocean.com
             # Run containers
-            docker compose up --pull always
+            docker compose -f docker-compose.yml up --pull always -d
