@@ -30,21 +30,21 @@ def get_images(project_id, external_id):
     projectStored = db.execute_select(query, values)
 
     if len(projectStored) == 0:
-        return {"STATUS": "ERROR", "message": "Project not found"}
+        return {"status": "ERROR", "message": "Project not found"}
 
     query = "SELECT * FROM project_resources WHERE external_resource_id = %s AND project_id = %s"
     values = [external_id, project_id]
     resource = db.execute_select(query, values)
 
     if len(resource) == 0:
-        return {"STATUS": "ERROR", "message": "Resource not found"}
+        return {"status": "ERROR", "message": "Resource not found"}
 
     # Store resource
     query = "SELECT * FROM project_resource_images WHERE resource_id = %s"
     values = [str(resource[0]["resource_id"])]
     images = db.execute_select(query, values)
 
-    return {"STATUS": "OK", "images": images}
+    return {"status": "OK", "images": images}
 
 
 class ImagesAdd(BaseModel):
@@ -74,23 +74,23 @@ def add_images(project_id, external_id, imagesAdd: ImagesAdd):
     projectStored = db.execute_select(query, values)
 
     if len(projectStored) == 0:
-        return {"STATUS": "ERROR", "message": "Project not found"}
+        return {"status": "ERROR", "message": "Project not found"}
 
     query = "SELECT * FROM project_resources WHERE external_resource_id = %s AND project_id = %s"
     values = [external_id, project_id]
     resource = db.execute_select(query, values)
 
     if len(resource) == 0:
-        return {"STATUS": "ERROR", "message": "Resource not found"}
+        return {"status": "ERROR", "message": "Resource not found"}
 
     # store images
     for img_url in imagesAdd.images_url:
         image_id = images_repository.add_resource_image(str(resource[0]["resource_id"]), img_url, True)
         if image_id is None:
-            return {"STATUS": "ERROR", "MESSAGE": "Image Store failed"}
+            return {"status": "ERROR", "message": "Image Store failed"}
 
     db.conn.commit()
-    return {"STATUS": "OK"}
+    return {"status": "OK"}
 
 
 class ImagesDelete(BaseModel):
@@ -118,14 +118,14 @@ def delete_image(project_id, external_id, imagesDelete: ImagesDelete):
     projectStored = db.execute_select(query, values)
 
     if len(projectStored) == 0:
-        return {"STATUS": "ERROR", "message": "Project not found"}
+        return {"status": "ERROR", "message": "Project not found"}
 
     query = "SELECT * FROM project_resources WHERE external_resource_id = %s AND project_id = %s"
     values = [external_id, project_id]
     resource = db.execute_select(query, values)
 
     if len(resource) == 0:
-        return {"STATUS": "ERROR", "message": "Resource not found"}
+        return {"status": "ERROR", "message": "Resource not found"}
 
     delete_query = "DELETE FROM project_resource_images WHERE resource_id = %s"
     delete_values = (str(resource[0]["resource_id"]),)
@@ -133,6 +133,6 @@ def delete_image(project_id, external_id, imagesDelete: ImagesDelete):
     # Execute the delete query
     deleted_rows = db.execute_delete(delete_query, delete_values)
     if deleted_rows is None:
-        return {"STATUS": "ERROR", "message": "Delete undone"}
+        return {"status": "ERROR", "message": "Delete undone"}
 
-    return {"STATUS": "OK"}
+    return {"status": "OK"}

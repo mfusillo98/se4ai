@@ -23,6 +23,7 @@ services:
         ports:
             - "8080:80"
     app:
+        restart: always
         links:
             - "db"
         build:

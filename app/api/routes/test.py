@@ -5,9 +5,9 @@ router = APIRouter()
 
 @router.get("/hello")
 def hello():
-    return {"STATUS": "OK"}
+    return {"status": "OK"}
 
 
 @router.get("/world")
 def world():
-    return {"STATUS": "OK"}
+    return {"status": "OK"}

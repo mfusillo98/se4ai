@@ -35,16 +35,16 @@ def get_train_history(project_id, request: GetTrainHistoryRequests):
 
     project = projects_repository.get_project(project_id, request.api_key)
     if project is None:
-        return {"STATUS": "ERROR", "message": "Project not found"}
+        return {"status": "ERROR", "message": "Project not found"}
 
     query = "SELECT * FROM project_train_history WHERE project_id = %s"
     values = [project_id, ]
     trains = db.execute_select(query, values)
 
     if len(trains) == 0:
-        return {"STATUS": "ERROR", "message": "Trains not found"}
+        return {"status": "ERROR", "message": "Trains not found"}
 
-    return {"STATUS": "OK", "images": trains}
+    return {"status": "OK", "images": trains}
 
 
 class PullTrainHistoryRequests(BaseModel):
@@ -68,20 +68,20 @@ def pull_training(project_id, request: PullTrainHistoryRequests):
 
     project = projects_repository.get_project(project_id, request.api_key)
     if project is None:
-        return {"STATUS": "ERROR", "message": "Project not found"}
+        return {"status": "ERROR", "message": "Project not found"}
 
     query = "SELECT * FROM project_train_history WHERE project_id = %s AND history_id = %s"
     values = [project_id, request.history_id]
     train = db.execute_select(query, values)
 
     if len(train) == 0:
-        return {"STATUS": "ERROR", "message": "Train not found"}
+        return {"status": "ERROR", "message": "Train not found"}
 
     rows_affected = db.execute_update(
         "UPDATE projects SET selected_features_indexes = %s, trained = 1 WHERE project_id = %s",
         [train[0]["selected_features_indexes"], project_id])
 
     if rows_affected is None:
-        return {"STATUS": "ERROR", "message": "Update failed"}
+        return {"status": "ERROR", "message": "Update failed"}
 
-    return {"STATUS": "OK", "message": "Pull executed"}
+    return {"status": "OK", "message": "Pull executed"}

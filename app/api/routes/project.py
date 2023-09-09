@@ -42,7 +42,29 @@ def create_project(project: ProjectCreateRequest):
 
     db = get_db()
     project_id = db.execute_insert(query, values)
-    return {"STATUS": "OK", "project_id": project_id, "api_key": api_key}
+    return {"status": "OK", "project_id": project_id, "api_key": api_key}
+
+
+# Get project
+
+@router.get("/api/projects/{project_id}")
+def get_project(project_id, api_key):
+    """
+    Update a project info like name or selected features
+
+    :param project_id:
+    :param api_key:
+
+    :type project_id:
+    :type api_key:
+    :return:
+    """
+
+    projectStored = projects_repository.get_project(project_id, api_key)
+    if projectStored is None:
+        return {"status": "ERROR", "message": "Project not found"}
+
+    return {"status": "OK", "project": projectStored}
 
 
 # Update project
@@ -69,7 +91,7 @@ def update_project(project_id, project: ProjectUpdateRequest):
 
     projectStored = projects_repository.get_project(project_id, project.api_key)
     if projectStored is None:
-        return {"STATUS": "ERROR", "message": "Project not found"}
+        return {"status": "ERROR", "message": "Project not found"}
 
     query = "UPDATE projects SET name = %s, selected_features_indexes = %s WHERE project_id = %s"
     # If values are new I update them
@@ -86,7 +108,41 @@ def update_project(project_id, project: ProjectUpdateRequest):
 
     rows_affected = db.execute_update(query, values)
     if rows_affected is None:
-        return {"STATUS": "ERROR", "message": "Update failed"}
+        return {"status": "ERROR", "message": "Update failed"}
+
+    return {"status": "OK"}
+
+
+#Project delete
+
+class ProjectDeleteRequest(BaseModel):
+    api_key: str
+
+@router.post("/api/projects/{project_id}/delete")
+def delete_project(project_id, project: ProjectDeleteRequest):
+    """
+    Delete a project info like name or selected features
+
+    :param project_id:
+    :param project:
+
+    :type project_id:
+    :type project:
+    :return:
+    """
+    db = get_db()
+
+    projectStored = projects_repository.get_project(project_id, project.api_key)
+    if projectStored is None:
+        return {"status": "ERROR", "message": "Project not found"}
+
+    delete_query = "DELETE FROM projects WHERE project_id = %s"
+    delete_values = (project_id,)
+
+    # Execute the delete query
+    deleted_rows = db.execute_delete(delete_query, delete_values)
+    if deleted_rows is None:
+        return {"status": "ERROR", "message": "Delete undone"}
 
     return {"status": "OK"}
 
@@ -113,10 +169,10 @@ async def train(project_id, request: TrainProjectRequest, background_tasks: Back
     """
     projectStored = projects_repository.get_project(project_id, request.api_key)
     if projectStored is None:
-        return {"STATUS": "ERROR", "message": "Project not found"}
+        return {"status": "ERROR", "message": "Project not found"}
 
     background_tasks.add_task(projects_repository.train_project, project_id)
-    return {"STATUS": "OK", "message": "Train will be executed in background"}
+    return {"status": "OK", "message": "Train will be executed in background"}
 
 
 class FeatureSelectionRequest(BaseModel):
@@ -137,7 +193,7 @@ def apply_training(project_id, request: FeatureSelectionRequest):
     """
     project = projects_repository.get_project(project_id, request.api_key)
     if project is None:
-        return {"STATUS": "ERROR", "message": "Project not found"}
+        return {"status": "ERROR", "message": "Project not found"}
     return projects_repository.apply_training(project)
 
 
@@ -164,7 +220,7 @@ def search_project(api_key, project_id, image_url, limit, html):
     project = projects_repository.get_project(project_id, api_key)
 
     if project["trained"] != 1:
-        return {"STATUS": "ERROR", "message": "You have to train your project"}
+        return {"status": "ERROR", "message": "You have to train your project"}
 
     image_raw_features = extract_features_from_url(image_url)
     best_features_indexes = [int(x) for x in project["selected_features_indexes"].split(",")]
@@ -186,7 +242,7 @@ def search_project(api_key, project_id, image_url, limit, html):
             html_content = html_content.replace("{{results}}", ''.join(results_html))
             return HTMLResponse(content=html_content, status_code=200)
     else:
-        return {"STATUS": "OK", "results": results}
+        return {"status": "OK", "results": results}
 
 
 @router.get("/")

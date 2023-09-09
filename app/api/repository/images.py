@@ -23,7 +23,7 @@ def add_resource_image(resource_id, img_url, compute_features=True):
     values = [img_url, resource_id]
     image_id = db.execute_insert(query, values)
     if image_id is None:
-        return {"STATUS": "ERROR", "MESSAGE": "Image Store failed"}
+        return {"status": "ERROR", "message": "Image Store failed"}
 
     if compute_features:
         try:
@@ -33,7 +33,7 @@ def add_resource_image(resource_id, img_url, compute_features=True):
             values = [image_id, ','.join([str(v) for v in image_raw_features])]
             image_id = db.execute_insert(query, values)
             if image_id is None:
-                return {"STATUS": "ERROR", "MESSAGE": "Image Store failed"}
+                return {"status": "ERROR", "message": "Image Store failed"}
         except:
-            return {"STATUS": "ERROR", "MESSAGE": "Image Store failed"}
+            return {"status": "ERROR", "message": "Image Store failed"}
     return image_id

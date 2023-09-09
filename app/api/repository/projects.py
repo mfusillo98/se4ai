@@ -16,7 +16,7 @@ def get_project(project_id, api_key):
     :param api_key: apikey of project to ant to access
 
     :type project_id: int
-    :type api_key: int
+    :type api_key: str
     :return:
     """
 
@@ -53,7 +53,7 @@ def train_project(project_id):
         "UPDATE projects SET selected_features_indexes = %s, trained = 1 WHERE project_id = %s",
         [indexes_str, project_id])
     if rows_affected is None:
-        return {"STATUS": "ERROR", "message": "Update failed"}
+        return {"status": "ERROR", "message": "Update failed"}
 
     db.execute_insert(
         "INSERT INTO project_train_history (project_id, selected_features_indexes) VALUES (%s, %s)",
@@ -62,7 +62,7 @@ def train_project(project_id):
     end = time.time()
     metrics.metrics['training_duration_seconds'].observe(end - start)
 
-    return {"STATUS": "OK", "message": "Project training completed", "indexes": indexes_str,
+    return {"status": "OK", "message": "Project training completed", "indexes": indexes_str,
             "features_num": len(best_features_indexes)}
 
 
@@ -95,7 +95,7 @@ def apply_training(project):
             "INSERT INTO project_resource_images_selected_features (image_id, features) VALUES (%s, %s)",
             [image["image_id"], new_features])
         if id is None:
-            return {"STATUS": "ERROR", "MESSAGE": "Cannot store image's selected features"}
+            return {"status": "ERROR", "message": "Cannot store image's selected features"}
 
     db.conn.commit()
-    return {"STATUS": "OK", "message": "Project training applied successfully"}
+    return {"status": "OK", "message": "Project training applied successfully"}
