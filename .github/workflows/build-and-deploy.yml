@@ -26,9 +26,6 @@ jobs:
       - name: Checkout the repo
         uses: actions/checkout@v2
 
-      - name: Build container image
-        run: docker compose -f docker-compose.yml build
-
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
@@ -37,11 +34,11 @@ jobs:
       - name: Log in to DigitalOcean Container Registry with short-lived credentials
         run: doctl registry login --expiry-seconds 600
 
-      - name: Build image
-        run: docker compose -f docker-compose.yml build
+      - name: Build container image
+        run: docker compose -f docker-compose.yml build --push
 
       - name: Push image to DigitalOcean Container Registry
-        run: docker compose -f docker-compose.yml push
+        run: docker compose -f docker-compose.yml push --include-deps
 
 #  deploy:
 #    runs-on: ubuntu-latest
