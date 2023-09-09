@@ -1,5 +1,5 @@
 """
-Search Engine repository
+Search Engine repository, a collection of useful function for search
 """
 
 from scipy.spatial import distance
@@ -16,6 +16,7 @@ def search(project_id, image_features, max_results=10):
     :type project_id: int
     :type image_features: list
     :type max_results: int
+
     :return:
     """
 

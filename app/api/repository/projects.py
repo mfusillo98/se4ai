@@ -2,10 +2,12 @@
 Projects repository
 """
 
+import time
+
 import numpy as np
+
 from app.database.database import get_db
 from app.feature_selection.pca import get_best_features_indexes
-import time
 from app.utils import metrics
 
 
