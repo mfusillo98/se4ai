@@ -14,14 +14,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Deploy API
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@1.0.0
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           script_stop: true
           command_timeout: 200m
-          script: /
+          script: |
             cd /home/apps/se4ai
             git pull
             cd ..
