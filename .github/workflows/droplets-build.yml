@@ -1,0 +1,29 @@
+name: CI
+
+# 1
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push events but only for the master branch
+  push:
+    branches: [ main ]
+
+#3
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Deploy API
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          script_stop: true
+          command_timeout: 200m
+          script: /
+            cd /home/apps/se4ai
+            git pull
+            cd ..
+            docker compose build --force-rm --no-cache --compress
+            docker compose up -d
