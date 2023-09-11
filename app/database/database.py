@@ -16,10 +16,10 @@ def get_db():
 class Database:
     def __init__(self):
         #self.host = 'localhost'
-        self.host = 'db'  # Docker container name
+        self.host = '104.248.141.100'  # Docker container name
         self.user = 'root'
         #self.port = '8888'
-        self.port = '3306'
+        self.port = '32001'
         #self.socket = '/Applications/MAMP/tmp/mysql/mysql.sock'
         self.password = 'root'
         self.database = 'software_engineering'
