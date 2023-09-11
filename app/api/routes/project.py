@@ -47,7 +47,7 @@ def create_project(project: ProjectCreateRequest):
 
 # Get project
 
-@router.get("/api/projects/{project_id}")
+@router.get("/api/projects/{project_id}/get")
 def get_project(project_id, api_key):
     """
     Update a project info like name or selected features
