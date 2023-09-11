@@ -24,6 +24,5 @@ jobs:
           script: |
             cd /home/apps/se4ai
             git pull
-            cd ..
             docker compose build --force-rm --no-cache --compress
             docker compose up -d
