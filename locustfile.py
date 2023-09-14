@@ -17,8 +17,8 @@ class QuickstartUser(HttpUser):
     """
     This class defines a Locust user for load testing a web API.
     """
-
-    wait_time = between(1, 5)
+    min_wait = 5000
+    max_wait = 9000
 
     credentials = {"project_id": 34, "api_key": "H8RMIAIGWBCH90nBVSg12WaxNZvXdaV6"}
 
